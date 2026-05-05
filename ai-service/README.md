@@ -222,6 +222,8 @@ The system combines **risk analysis (Day 3)** and **recommendations (Day 4)** in
 * ✔ Tested using Postman
 
 
+
+
 ###  Day 6 – AI Report Generation
 
 Implemented an AI-powered API to generate a structured Vendor Risk Report using LLM.

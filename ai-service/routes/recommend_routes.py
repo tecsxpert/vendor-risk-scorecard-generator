@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from services.groq_service import get_ai_response
+from services.prompt_loader import load_prompt
 from services.recommend_service import generate_full_analysis
 
 recommend_bp = Blueprint('recommend', __name__)
@@ -17,6 +19,8 @@ def recommend():
         # ✅ Day 5 logic
         result = generate_full_analysis(vendor, risk_score)
 
+        #DAY 5 logic
+        result = generate_full_analysis(vendor,risk_score)
         return jsonify(result)
 
     except Exception as e:
