@@ -437,3 +437,67 @@ AI failure → fallback response
 ✔ Setup instructions included
 ✔ Ready for developer usage
 DAY 10 COMPLETED
+
+
+📅 Day 11 – Security Hardening & Model Optimization
+
+Perform full OWASP ZAP scan and fix Critical/High vulnerabilities
+Improve performance by pre-loading sentence-transformer model at startup
+
+🔹 Work Done
+🔐 Security Improvements
+Integrated Flask-Talisman for security headers
+Implemented strong Content Security Policy (CSP)
+Added headers:
+X-Content-Type-Options
+X-Frame-Options
+Strict-Transport-Security
+Referrer-Policy
+Permissions-Policy
+Removed default server info and set:
+Server: SecureServer/1.0
+Limited request size (1MB)
+
+⚡ Performance Optimization
+Pre-loaded sentence-transformer model during app startup
+Avoided loading model per request
+Reduced API response latency
+
+🔹 ZAP Scan Result
+✅ Critical Issues: 0
+✅ High Issues: 0
+Remaining: 1 Systemic alert (server fingerprinting – low risk)
+
+Remaining alert is due to ZAP heuristic detection, not an actual vulnerability
+Model preloading significantly improves performance
+
+🔹 Outcome
+✔ Application secured against major vulnerabilities
+✔ Faster response due to model preloading
+✔ Day 11 requirements successfully completed
+
+
+📅 Day 12 – AI Batch Testing & Knowledge Integration
+
+- Seeded ChromaDB with 10 domain-specific security knowledge documents
+- Integrated SentenceTransformer (all-MiniLM-L6-v2) for semantic search
+- Implemented API to fetch risk-based insights using knowledge retrieval
+- Created batch script to process 30 vendor demo records
+- Generated AI-driven outputs for each vendor
+- Saved results in demo_output.json for demo-ready usage
+
+✅ DAY 12 COMPLETED
+
+
+
+## Day 13 - AI Packaging & Deployment
+
+- Configured Docker for AI service containerization
+- Added exact dependency versions in requirements.txt
+- Integrated PostgreSQL and Redis containers
+- Successfully deployed and tested AI backend APIs
+- Created .env.example for environment configuration
+- Verified Docker build and API functionality using Postman
+
+✅ DAY 13 COMPLETED
+
