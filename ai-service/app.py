@@ -1,46 +1,91 @@
 from flask import Flask, jsonify
 from flask_talisman import Talisman
+from werkzeug.serving import WSGIRequestHandler
 
-# 🔽 Import your route blueprints
+# IMPORT BLUEPRINTS
 from routes.report_routes import report_bp
 from routes.health_routes import health_bp
+from routes.ai_routes import ai_routes
 
+# IMPORT CHROMA INITIALIZER
+from services.chroma_service import initialize_chroma
+
+# Initialize ChromaDB
+initialize_chroma()
+
+# CUSTOM SERVER HEADER
+class CustomRequestHandler(WSGIRequestHandler):
+
+    def version_string(self):
+        return "SecureServer/1.0"
+
+
+# CREATE FLASK APP
 app = Flask(__name__)
 
-# ✅ Limit request size (ZAP fix)
+# BASIC SECURITY SETTINGS
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024  # 1MB
-app.config['JSON_SORT_KEYS'] = False  # keep response order stable
+app.config['JSON_SORT_KEYS'] = False
 
-# ✅ Content Security Policy
+# CONTENT SECURITY POLICY
 csp = {
-    'default-src': "'self'"
+    'default-src': "'self'",
+    'script-src': "'self'",
+    'style-src': "'self'",
+    'img-src': "'self' data:",
+    'font-src': "'self'",
+    'connect-src': "'self'",
+    'object-src': "'none'",
+    'frame-ancestors': "'none'",
+    'base-uri': "'self'",
+    'form-action': "'self'"
 }
 
-# ✅ Apply security headers via Talisman
-Talisman(app, content_security_policy=csp, force_https=False,frame_options='DENY')
+# APPLY TALISMAN SECURITY
+Talisman(
+    app,
+    content_security_policy=csp,
+    force_https=False,
+    frame_options='DENY'
+)
 
-# ✅ Additional Security Headers (only extra ones)
+# ADD SECURITY HEADERS
 @app.after_request
 def add_headers(response):
-    response.headers.setdefault('X-Content-Type-Options', 'nosniff')
-    response.headers['X-Frame-Options'] = 'DENY'
-    response.headers.setdefault('X-XSS-Protection', '1; mode=block')
-    response.headers.setdefault('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
-    
-    # Hide server info (ZAP fix)
+
+    # Remove default server header
     response.headers.pop('Server', None)
+
+    # Add custom safe server header
+    response.headers['Server'] = 'SecureServer/1.0'
+
+    # Security headers
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Permissions-Policy'] = 'geolocation=(), camera=()'
 
     return response
 
-# ✅ Root route
+# ROOT ROUTE
 @app.route('/')
 def home():
-    return jsonify({"message": "API running securely"}), 200
 
-# ✅ Register Blueprints
+    return jsonify({
+        "message": "AI Vendor Risk API running securely"
+    }), 200
+
+# REGISTER BLUEPRINTS
 app.register_blueprint(report_bp, url_prefix='/ai')
 app.register_blueprint(health_bp, url_prefix='/ai')
+app.register_blueprint(ai_routes, url_prefix='/ai')
 
-# ✅ Run server
+# RUN APPLICATION
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+        host="0.0.0.0",
+        port=5000
+    )
