@@ -1,0 +1,11 @@
+com\company\vendorrisk\controller\UploadControllerTest.class
+com\company\vendorrisk\controller\VendorControllerTest.class
+com\company\vendorrisk\controller\ExportControllerTest.class
+com\company\vendorrisk\controller\AnalyticsControllerTest.class
+com\company\vendorrisk\service\FileUploadServiceTest.class
+com\company\vendorrisk\service\VendorServiceTest.class
+com\company\vendorrisk\service\AnalyticsServiceTest.class
+com\company\vendorrisk\service\ExportServiceTest.class
+com\company\vendorrisk\controller\StatsControllerTest.class
+com\company\vendorrisk\service\StatsServiceTest.class
+com\company\vendorrisk\aspect\AuditLoggingAspectTest.class
